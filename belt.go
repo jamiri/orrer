@@ -11,3 +11,16 @@ func GetAny(errors ...error) error {
 }
 
 
+type Fn func() (interface{}, error)
+
+func GetValsOrError(fns ...Fn) ([]interface{}, error) {
+	res := make([]interface{}, len(fns))
+	for idx, fn := range fns {
+		val, err := fn()
+		if err != nil {
+			return nil, err
+		}
+		res[idx] = val
+	}
+	return res, nil
+}
