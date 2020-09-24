@@ -10,4 +10,18 @@ func GetAny(errors ...error) error {
 	return nil
 }
 
+type Fn func() (interface{}, error)
 
+// GetValsOrError runs a series of functions; in case any of functions return an error, it will be returned, unless the
+// results is returned in an array
+func GetValsOrError(fns ...Fn) ([]interface{}, error) {
+	res := make([]interface{}, len(fns))
+	for idx, fn := range fns {
+		val, err := fn()
+		if err != nil {
+			return nil, err
+		}
+		res[idx] = val
+	}
+	return res, nil
+}
