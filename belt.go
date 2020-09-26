@@ -60,7 +60,6 @@ func GoGetValsOrError(fns ...Fn) ([]interface{}, error) {
 			return nil, err
 		case <-doneCh:
 			return res, nil
-
 		}
 	}
 }
