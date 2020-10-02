@@ -37,16 +37,16 @@ func GoGetValsOrError(fns ...Fn) ([]interface{}, error) {
 	wg := sync.WaitGroup{}
 
 	for idx, fn := range fns {
-		go func(i int) {
-			wg.Add(1)
-			val, err := fn()
+		wg.Add(1)
+		go func(i int, toRun Fn) {
+			val, err := toRun()
 			if err != nil {
 				errCh <- err
 				return
 			}
 			res[i] = val
 			wg.Done()
-		}(idx)
+		}(idx, fn)
 	}
 
 	go func() {
