@@ -13,6 +13,7 @@ func GetAny(errors ...error) error {
 }
 
 type Fn func() (interface{}, error)
+type FnArg func(interface{}) (interface{}, error)
 
 // GetValsOrError runs a series of functions; in case any of functions return an error, it will be returned, otherwise
 // results is returned in an array
@@ -62,4 +63,21 @@ func GoGetValsOrError(fns ...Fn) ([]interface{}, error) {
 			return res, nil
 		}
 	}
+}
+
+// GetSeriesOrError runs a series of functions passing the returning value of first one to the second and so on.
+func GetSeriesOrError(kickOff interface{}, fns ...FnArg) (interface{}, error) {
+	var val interface{}
+	var err error
+	for idx, fn := range fns {
+		if idx == 0 {
+			val, err = fn(kickOff)
+			continue
+		}
+		val, err = fn(val)
+		if err != nil {
+			return nil, err
+		}
+	}
+	return val, nil
 }
