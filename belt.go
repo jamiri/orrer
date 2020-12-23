@@ -1,3 +1,4 @@
+// Copyright 2020 Javad M. Amiri. All rights reserved. MIT license.
 package orrer
 
 import "sync"
